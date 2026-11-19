@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+    
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BrainPuzzleHub.ViewModels"
+             x:Class="BrainPuzzleHub.UIGAMEPAGE.Slider_Page"
+             x:DataType="vm:SliderViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#EAF4FB"
+           
+             >
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="20,48,20,32">
+        <!--Header-->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,16">
+
+            <Button Grid.Column="0"
+                    Text="◀"
+                    FontSize="18"
+                    TextColor="White"
+                    BackgroundColor="#4D96FF"
+                    CornerRadius="10"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    Command="{Binding GoBackCommand}"/>
+
+            <Label Grid.Column="1"
+                   Text="15 Puzzle"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#2C3E50"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+
+            <Button Grid.Column="2"
+                    Text="Reset"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    BackgroundColor="#4D96FF"
+                    CornerRadius="10"
+                    WidthRequest="65"
+                    HeightRequest="44"
+                    Command="{Binding StartNewGameCommand}"/>
+        </Grid>
+
+        <!--Steps Scoreboard-->
+        <HorizontalStackLayout Grid.Row="1"
+                               Spacing="12"
+                               HorizontalOptions="Center"
+                               Margin="0,0,0,20">
+
+            <Frame BackgroundColor="#4D96FF"
+                   CornerRadius="8"
+                   Padding="20,8"
+                   HasShadow="False"
+                   BorderColor="Transparent">
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                    <Label Text="Steps" FontSize="11" FontAttributes="Bold" TextColor="#DCEBFF" HorizontalOptions="Center"/>
+                    <Label Text="{Binding Moves}" FontSize="22" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#4D96FF"
+                   CornerRadius="8"
+                   Padding="20,8"
+                   HasShadow="False"
+                   BorderColor="Transparent">
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                    <Label Text="Optimal number of steps" FontSize="11" FontAttributes="Bold" TextColor="#DCEBFF" HorizontalOptions="Center"/>
+                    <Label Text="{Binding BestMoves}" FontSize="22" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+        </HorizontalStackLayout>
+
+        <!--Chessboard -->
+        <Frame Grid.Row="2"
+               BackgroundColor="#B8D8F0"
+               CornerRadius="10"
+               Padding="8"
+               HasShadow="False"
+               BorderColor="Transparent"
+               VerticalOptions="Center">
+
+            <CollectionView ItemsSource="{Binding Cells}" SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="4"
+                                     HorizontalItemSpacing="8"
+                                     VerticalItemSpacing="8"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SliderTile">
+                        <Frame CornerRadius="6"
+                               Padding="0"
+                               HasShadow="False"
+                               BorderColor="Transparent"
+                               HeightRequest="76"
+                               WidthRequest="76"
+                               BackgroundColor="White"
+                              >
+                            <!--BackgroundColor="{Binding IsEmpty, Converter={StaticResource EmptyToColorConverter}}"-->
+                            <!--change it to a fixed color and test it works. 
+                            The empty blocks need to have a "transparent/no background" effect. 
+                            Check if IsEmpty returns transparent or white.-->
+                            
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SliderViewModel}}, Path=TapTileCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Label Text="{Binding DisplayText}"
+                                   TextColor="#2C3E50"
+                                   FontSize="26"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
+
+        <!-- win -->
+        <Grid Grid.Row="2"
+              BackgroundColor="#00000088"
+              IsVisible="{Binding IsWin}"
+              ZIndex="10">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                <Label Text=" Complete the puzzle！"
+                       FontSize="30"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+                <Label Text="{Binding Moves, StringFormat='Used {0} steps'}"
+                       FontSize="16"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+                <Button Text="One more game"
+                        FontAttributes="Bold"
+                        BackgroundColor="#4D96FF"
+                        TextColor="White"
+                        CornerRadius="12"
+                        Padding="32,12"
+                        Command="{Binding StartNewGameCommand}"/>
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+
+
+</ContentPage>

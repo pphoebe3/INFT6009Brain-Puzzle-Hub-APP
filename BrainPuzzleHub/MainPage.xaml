@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BrainPuzzleHub.ViewModels"
+    xmlns:models="clr-namespace:BrainPuzzleHub.Models"
+    x:Class="BrainPuzzleHub.MainPage"
+    x:DataType="vm:HomeViewModel"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="#abd7db"><!--Anti-Flash White-->
+    <!--Navigation bar visible-->
+    <!--
+    Layout/Color/Control Position-->
+    <!---->
+    <!--HOMEpageUi!-->
+    <!--<! Comment-->
+
+  
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="0,0,0,32">
+
+            <!--Heade-->
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  Padding="20,52,20,24">
+
+                <!--EXIT -->
+                <Button Grid.Column="0"
+                        Text="exit"
+                        FontSize="18"
+                        TextColor="White"
+                        BackgroundColor="#2E2E4A"
+                        CornerRadius="15"
+                        WidthRequest="65"
+                        HeightRequest="48"
+                        Command="{Binding ExitAppCommand}"/>
+
+                <!--Logo-->
+                <VerticalStackLayout Grid.Column="1"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center">
+                    <Label Text="Brain Puzzle Hub"
+                           FontSize="30"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Play. Solve. Repeat."
+                           FontSize="11"
+                           TextColor="#8888AA"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!--Account button-->
+                <Button Grid.Column="2"
+                        Text="👤"
+                        FontSize="18"
+                        TextColor="White"
+                        BackgroundColor="#2E2E4A"
+                        CornerRadius="12"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        Command="{Binding OpenAccountCommand}"/>
+            </Grid>
+
+            <!--Daily Challenge Banner-->
+            <Frame Margin="20,4,20,28"
+                   Padding="0"
+                   CornerRadius="20"
+                   HasShadow="False"
+                   IsClippedToBounds="True"
+                   BorderColor="Transparent">
+                <Grid BackgroundColor="#845EC2"
+                      ColumnDefinitions="*,Auto"
+                      Padding="20,18">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="DAILY CHALLENGE"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="#D9C9F5"
+                               CharacterSpacing="1"/>
+
+                        <!--Different text is displayed according to IsDailyChallengeDone -->
+                        <Label FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="White">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsDailyChallengeDone}" Value="True">
+                                    <Setter Property="Text" Value="Today's challenge" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsDailyChallengeDone}" Value="False">
+                                    <Setter Property="Text" Value="Randomly challenge a game" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                        
+                    </VerticalStackLayout>
+                    
+                    <Button Grid.Column="1"
+                            Text="GO"
+                            FontAttributes="Bold"
+                            TextColor="#845EC2"
+                            BackgroundColor="White"
+                            CornerRadius="14"
+                            Padding="20,10"
+                            VerticalOptions="Center"
+                            Command="{Binding NavigateToDailyChallengeCommand}"/>
+                </Grid>
+            </Frame>
+
+            <!-- ===== Game vertical stacking list===== -->
+            <Label Text="Select Game"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   TextColor="#8888AA"
+                   Margin="24,0,24,12"/>
+
+            <CollectionView ItemsSource="{Binding Games}"
+                            Margin="20,0"
+                            SelectionMode="None">
+
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                       ItemSpacing="14"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:GameItem">
+                        <Frame Padding="0"
+                               CornerRadius="20"
+                               HasShadow="False"
+                               BorderColor="Transparent"
+                               IsClippedToBounds="True">
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=NavigateToGameCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Grid BackgroundColor="{Binding CardColor}"
+                                  ColumnDefinitions="Auto,*,Auto"
+                                  Padding="20,22"
+                                  HeightRequest="88">
+
+                                <!-- rounded icon -->
+                                <Frame Grid.Column="0"
+                                       BackgroundColor="#33FFFFFF"
+                                       CornerRadius="16"
+                                       Padding="0"
+                                       WidthRequest="48"
+                                       HeightRequest="48"
+                                       HasShadow="False"
+                                       BorderColor="Transparent"
+                                       VerticalOptions="Center">
+                                    <Label Text="{Binding Icon}"
+                                           FontSize="24"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Frame>
+
+                                <!-- Game Name -->
+                                <Label Grid.Column="1"
+                                       Text="{Binding Name}"
+                                       FontSize="19"
+                                       FontAttributes="Bold"
+                                       TextColor="White"
+                                       VerticalOptions="Center"
+                                       Margin="16,0,0,0"/>
+
+                                <!-- arrow -->
+                                <Label Grid.Column="2"
+                                       Text="›"
+                                       FontSize="26"
+                                       FontAttributes="Bold"
+                                       TextColor="White"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+    
