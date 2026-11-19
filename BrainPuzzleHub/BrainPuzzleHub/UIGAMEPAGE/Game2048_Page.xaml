@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:BrainPuzzleHub.ViewModels"
+    x:Class="BrainPuzzleHub.UIGAMEPAGE.Game2048_Page"
+    x:DataType="vm:Game2048ViewModel"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="#f2ead3">
+
+    <!--Grid plus gestures?-->
+
+    
+        
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+          Padding="20,48,20,32">
+        <!--chessboard position-->
+
+        <Grid.GestureRecognizers>
+            <SwipeGestureRecognizer Direction="Left"  Swiped="OnSwiped"/>
+            <SwipeGestureRecognizer Direction="Right" Swiped="OnSwiped"/>
+            <SwipeGestureRecognizer Direction="Up"    Swiped="OnSwiped"/>
+            <SwipeGestureRecognizer Direction="Down"  Swiped="OnSwiped"/>
+        </Grid.GestureRecognizers>
+        <!--
+            Add a swipe gesture to the Grid to recognize gestures
+            Trigger OnSwiped when the Grid is swiped-->
+
+        <!--header-->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="Auto,*,Auto"
+              Margin="0,0,0,16">
+
+            <!--GoBack-->
+            <Button Grid.Column="0"
+                    Text="exit"
+                    FontSize="18"
+                    TextColor="White"
+                    BackgroundColor="#8F7A66"
+                    CornerRadius="10"
+                    WidthRequest="80"
+                    HeightRequest="44"
+                    Command="{Binding GoBackCommand}"/><!---->
+
+            <!--title-->
+            <Label Grid.Column="1"
+                   Text="2048"
+                   FontSize="36"
+                   FontAttributes="Bold"
+                   TextColor="#776E65"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+
+            <!--restart-->
+            <Button Grid.Column="2"
+                    Text="restart"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    BackgroundColor="#8F7A66"
+                    CornerRadius="10"
+                    WidthRequest="80"
+                    HeightRequest="44"
+                    Command="{Binding StartNewGameCommand}"/>
+            <!---->
+            <!---->
+            <!---->
+        </Grid>
+
+        <!--Scoreboard-->
+        <HorizontalStackLayout Grid.Row="1"
+                               Spacing="12"
+                               HorizontalOptions="Center"
+                               Margin="0,0,0,20">
+
+            <!--current score-->
+            <Frame BackgroundColor="#BBADA0"
+                   CornerRadius="8"
+                   Padding="20,8"
+                   HasShadow="False"
+                   BorderColor="Transparent">
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                    <Label Text="mark"
+                           FontSize="11"
+                           FontAttributes="Bold"
+                           TextColor="#EEE4DA"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding Score}"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+                <!---->
+            </Frame>
+
+            <!--highest score-->
+            <Frame BackgroundColor="#BBADA0"
+                   CornerRadius="8"
+                   Padding="20,8"
+                   HasShadow="False"
+                   BorderColor="Transparent">
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                    <Label Text="highest score"
+                           FontSize="11"
+                           FontAttributes="Bold"
+                           TextColor="#EEE4DA"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding BestScore}"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <!---->
+                </VerticalStackLayout>
+            </Frame>
+        </HorizontalStackLayout>
+
+        <!--checkerboard-->
+        <Frame Grid.Row="2"
+               BackgroundColor="#BBADA0"
+               CornerRadius="10"
+               Padding="8"
+               HasShadow="False"
+               BorderColor="Transparent"
+               VerticalOptions="Center">
+
+            <CollectionView ItemsSource="{Binding Cells}"
+                            SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="4"
+                                     HorizontalItemSpacing="8"
+                                     VerticalItemSpacing="8"/>
+                    <!---->
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TileCell">
+                        <Frame BackgroundColor="{Binding Background}"
+                               CornerRadius="6"
+                               Padding="0"
+                               HasShadow="False"
+                               BorderColor="Transparent"
+                               HeightRequest="76"
+                               WidthRequest="76">
+                            <Label Text="{Binding DisplayText}"
+                                   TextColor="{Binding TextColor}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <!---->
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
+
+        <!--Slide-to-use bubble: A two-in-one tutorial and sliding area; 
+            the entire grid is bound to gestures, and the bubble area can also be slid.-->
+        <Frame Grid.Row="3"
+               BackgroundColor="#d6c7a7"
+               CornerRadius="20"
+               Padding="24,20"
+               Margin="0,20,0,0"
+               HasShadow="False"
+               BorderColor="Transparent"
+               HorizontalOptions="Center">
+            <!-- Each bubble now needs its own gesture binding; 
+            on Android, swipe gestures will not bubble from child controls to the parent Grid.-->
+            <Frame.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Left"  Swiped="OnSwiped"/>
+                <SwipeGestureRecognizer Direction="Right" Swiped="OnSwiped"/>
+                <SwipeGestureRecognizer Direction="Up"    Swiped="OnSwiped"/>
+                <SwipeGestureRecognizer Direction="Down"  Swiped="OnSwiped"/>
+            </Frame.GestureRecognizers>
+
+
+            <Grid RowDefinitions="Auto,Auto,Auto"
+                  ColumnDefinitions="Auto,Auto,Auto"
+                  RowSpacing="0"
+                  ColumnSpacing="0">
+
+                <!--upper-->
+                <Label Grid.Row="0" Grid.Column="1"
+                       Text="⬆"
+                       FontSize="26"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+
+                <!--L-->
+                <Label Grid.Row="1" Grid.Column="0"
+                       Text="⬅"
+                       FontSize="26"
+                       TextColor="White"
+                       VerticalOptions="Center"/>
+
+                <!--c-->
+                <Label Grid.Row="1" Grid.Column="1"
+                       Text="Slide here to merge numbers"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+
+                <!--R-->
+                <Label Grid.Row="1" Grid.Column="2"
+                       Text="→"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       VerticalOptions="Center"/>
+
+                <!--DDown-->
+                <Label Grid.Row="2" Grid.Column="1"
+                       Text="⬇"
+                       FontSize="26"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+            </Grid>
+        </Frame>
+
+
+
+        <!--Game Over/win-->
+        <Grid Grid.Row="2"
+              BackgroundColor="#00000088"
+              IsVisible="{Binding IsGameOver}"
+              ZIndex="10">
+            <VerticalStackLayout VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="16">
+                <Label Text="Game Over！"
+                       FontSize="32"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+                <Button Text="One more game"
+                        FontAttributes="Bold"
+                        BackgroundColor="#F65E3B"
+                        TextColor="White"
+                        CornerRadius="12"
+                        Padding="32,12"
+                        Command="{Binding StartNewGameCommand}"/>
+                <!---->
+            </VerticalStackLayout>
+        </Grid>
+
+        <Grid Grid.Row="2"
+              BackgroundColor="#00000088"
+              IsVisible="{Binding IsWin}"
+              ZIndex="10">
+            <VerticalStackLayout VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="16">
+                <Label Text="🎉 2048！"
+                       FontSize="32"
+                       FontAttributes="Bold"
+                       TextColor="#EDC22E"
+                       HorizontalOptions="Center"/>
+                <Button Text="Continue the challenge"
+                        FontAttributes="Bold"
+                        BackgroundColor="#EDC22E"
+                        TextColor="White"
+                        CornerRadius="12"
+                        Padding="32,12"
+                        Command="{Binding StartNewGameCommand}"/>
+                <!---->
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+   
+</ContentPage>

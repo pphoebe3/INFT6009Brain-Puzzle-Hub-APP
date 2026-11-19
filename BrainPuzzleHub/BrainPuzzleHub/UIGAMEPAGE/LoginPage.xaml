@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BrainPuzzleHub.ViewModels"
+             
+             x:Class="BrainPuzzleHub.UIGAMEPAGE.LoginPage"
+             x:DataType="vm:LoginViewModel"
+              Shell.NavBarIsVisible="False"
+             BackgroundColor="#77d9d2"
+             Title="LoginPage">
+    <VerticalStackLayout VerticalOptions="Center"
+                         Padding="32"
+                         Spacing="16"
+                         >
+        <Label 
+            Text="Brain Puzzle Hub!"
+               FontSize="26"
+               FontAttributes="Bold"
+               TextColor="White"
+               HorizontalOptions="Center"
+               Margin="0,0,0,24"/>
+        <Entry Placeholder="username"
+               Text="{Binding Username}"
+               BackgroundColor="#2E2E4A"
+               TextColor="White"
+               PlaceholderColor="#8888AA"/>
+
+        <Entry Placeholder="password"
+               Text="{Binding Password}"
+               IsPassword="True"
+               BackgroundColor="#2E2E4A"
+               TextColor="White"
+               PlaceholderColor="#8888AA"/>
+
+        <Label Text="{Binding ErrorMessage}"
+               TextColor="#FF6B6B"
+               FontSize="13"
+               IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"/>
+
+        <!--stringtoboolconverter needs a simple converter to check if the string is not empty
+        or remove the isvisible binding first. Displaying empty text when ErrorMessage is empty won't affect the layout. 
+      
+        -->
+
+
+        <Button Text="Log in"
+                BackgroundColor="#845EC2"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="14"
+                HeightRequest="50"
+                Command="{Binding LoginCommand}"/>
+
+        <Button Text="Don't have an account? Register now."
+                BackgroundColor="Transparent"
+                TextColor="White"
+                Command="{Binding GoToRegisterCommand}"/>
+
+    </VerticalStackLayout>
+</ContentPage>

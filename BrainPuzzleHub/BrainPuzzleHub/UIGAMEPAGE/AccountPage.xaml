@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BrainPuzzleHub.ViewModels"
+             xmlns:models="clr-namespace:BrainPuzzleHub.Models"
+             x:Class="BrainPuzzleHub.UIGAMEPAGE.AccountPage"
+             x:DataType="vm:AccountViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#dff1f2"
+             >
+    <ScrollView>
+        <VerticalStackLayout Padding="20,52,20,32" Spacing="20">
+
+            <!--exit -->
+            <Button Text="exit"
+                    FontSize="15"
+                    TextColor="White"
+                    BackgroundColor="#2E2E4A"
+                    CornerRadius="12"
+                    WidthRequest="80"
+                    HeightRequest="48"
+                    HorizontalOptions="Start"
+                    Command="{Binding GoBackCommand}"/>
+
+            <!--Profile picture username-->
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                <Label Text="{Binding Avatar}" FontSize="56" HorizontalOptions="Center"/>
+                <Label Text="{Binding Username}"
+                       FontSize="35"
+                       FontAttributes="Bold"
+                       TextColor="#FFC145"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <!--Summary of highest scores-->
+            <Label Text="Highest score in the game" FontSize="25" FontAttributes="Bold" TextColor="#8888AA"/>
+            <CollectionView ItemsSource="{Binding ScoreSummary}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:GameScore">
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,8">
+                            <Label Grid.Column="0" Text="{Binding GameName}" TextColor="#8888AA" FontSize="20"/>
+                            <Label Grid.Column="1" Text="{Binding BestScore}" TextColor="#FFC145" FontAttributes="Bold" FontSize="20"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!--Settings -->
+            <Label Text="set up" FontSize="25" FontAttributes="Bold" TextColor="#8888AA" Margin="0,16,0,0"/>
+
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0" Text="game sound effects" TextColor="#8888AA" VerticalOptions="Center" FontSize="20"/>
+                <Switch Grid.Column="1" IsToggled="{Binding SoundEnabled}"/>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0" Text="vibrates" TextColor="#8888AA" VerticalOptions="Center" FontSize="20"/>
+                <Switch Grid.Column="1" IsToggled="{Binding VibrationEnabled}"/>
+            </Grid>
+
+            <!-- Log out-->
+            <Button Text="Log out"
+                    BackgroundColor="#FF6B6B"
+                    TextColor="White"
+                    CornerRadius="14"
+                    HeightRequest="48"
+                    Margin="0,24,0,0"
+                    Command="{Binding LogoutCommand}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+
+
+
+
+</ContentPage>

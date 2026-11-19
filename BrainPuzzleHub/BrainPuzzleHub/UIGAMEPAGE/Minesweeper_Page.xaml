@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+    
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BrainPuzzleHub.ViewModels"
+             xmlns:models="clr-namespace:BrainPuzzleHub.Models"
+            
+             x:Class="BrainPuzzleHub.UIGAMEPAGE.Minesweeper_Page"
+             x:Name="ThisPage"
+             x:DataType="vm:MinesweeperViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#E8F5E9"
+             >
+
+
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto" Padding="16,48,16,32">
+
+        <!-- ===== Header ===== -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,0,0,16">
+
+            <Button Grid.Column="0"
+                    Text="exit"
+                    FontSize="18"
+                    TextColor="White"
+                    BackgroundColor="#43A047"
+                    CornerRadius="10"
+                    WidthRequest="60"
+                    HeightRequest="44"
+                    Command="{Binding GoBackCommand}"/>
+
+            <Label Grid.Column="1"
+                   Text="Minesweeper"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="#2E7D32"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+
+
+            <Button Grid.Column="2"
+                    Text="🚩"
+                    FontSize="18"
+                    TextColor="White"
+                    BackgroundColor="#F9A825"
+                    CornerRadius="10"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    Command="{Binding ToggleModeCommand}"/>
+
+            <Button Grid.Column="3"
+                    Text="restart"
+                    FontSize="13"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    BackgroundColor="#43A047"
+                    CornerRadius="10"
+                    WidthRequest="70"
+                    HeightRequest="44"
+                    Command="{Binding StartNewGameCommand}"/>
+        </Grid>
+
+        <!--Scoreboard: Time Spent / Flags Remaining-->
+        <HorizontalStackLayout Grid.Row="1"
+                               Spacing="12"
+                               HorizontalOptions="Center"
+                               Margin="0,0,0,16">
+
+            <Frame BackgroundColor="#43A047" CornerRadius="8" Padding="18,8" HasShadow="False" BorderColor="Transparent">
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                    <Label Text="time" FontSize="11" FontAttributes="Bold" TextColor="#DFF5E1" HorizontalOptions="Center"/>
+                    <Label Text="{Binding ElapsedSeconds}" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#43A047" CornerRadius="8" Padding="18,8" HasShadow="False" BorderColor="Transparent">
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                    <Label Text="flags" FontSize="11" FontAttributes="Bold" TextColor="#DFF5E1" HorizontalOptions="Center"/>
+                    <Label Text="{Binding FlagsLeft}" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#43A047" CornerRadius="8" Padding="18,8" HasShadow="False" BorderColor="Transparent">
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                    <Label Text="best" FontSize="11" FontAttributes="Bold" TextColor="#DFF5E1" HorizontalOptions="Center"/>
+                    <Label Text="{Binding BestTime}" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+        </HorizontalStackLayout>
+
+        <!--Prompt bar-->
+        <Label Grid.Row="2"
+               Text="Click the 🚩 button to switch between flag planting/revealing modes, 
+               then click the grid operation."
+               FontSize="12"
+               TextColor="#558B2F"
+               HorizontalOptions="Center"
+               Margin="0,0,0,12"/>
+
+        <!--9x9 Chessboard-->
+        <Frame Grid.Row="3"
+               BackgroundColor="#A5D6A7"
+               CornerRadius="8"
+               Padding="6"
+               HasShadow="False"
+               BorderColor="Transparent"
+               HorizontalOptions="Center">
+
+            <CollectionView ItemsSource="{Binding Cells}" SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="9"
+                                     HorizontalItemSpacing="3"
+                                     VerticalItemSpacing="3"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:MinesweeperCell">
+                        <Frame BackgroundColor="{Binding Background}"
+                               CornerRadius="4"
+                               Padding="0"
+                               HasShadow="False"
+                               BorderColor="Transparent"
+                               HeightRequest="34"
+                               WidthRequest="34">
+
+                            <!--Click to uncover-->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MinesweeperViewModel}}, 
+                                    Path=RevealCellCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Label Text="{Binding DisplayText}"
+                                   TextColor="{Binding TextColor}"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
+
+        <!--Game Over / Victory/Bomb Layer-->
+        <Grid Grid.Row="3"
+              BackgroundColor="#000000AA"
+              IsVisible="{Binding IsGameOver}"
+              ZIndex="10">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                <Label Text="Boom！" FontSize="30" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                <Button Text="try again"
+                        FontAttributes="Bold"
+                        BackgroundColor="#E53935"
+                        TextColor="White"
+                        CornerRadius="12"
+                        Padding="32,12"
+                        Command="{Binding StartNewGameCommand}"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <Grid Grid.Row="3"
+              BackgroundColor="#000000AA"
+              IsVisible="{Binding IsWin}"
+              ZIndex="10">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                <Label Text=" Cleared！" FontSize="30" FontAttributes="Bold" TextColor="#4ced52" HorizontalOptions="Center"/>
+                <Label Text="{Binding ElapsedSeconds, StringFormat='Time taken: {0} seconds'}" FontSize="16" TextColor="White" HorizontalOptions="Center"/>
+                <Button Text="play again"
+                        FontAttributes="Bold"
+                        BackgroundColor="#43A047"
+                        TextColor="White"
+                        CornerRadius="12"
+                        Padding="32,12"
+                        Command="{Binding StartNewGameCommand}"/>
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

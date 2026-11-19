@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:vm="clr-namespace:BrainPuzzleHub.ViewModels"
+             x:Class="BrainPuzzleHub.UIGAMEPAGE.RegisterPage"
+             x:DataType="vm:RegisterViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#0ba7b0"
+             
+                                          >
+    
+    <VerticalStackLayout VerticalOptions="Center"
+                         Padding="32"
+                         Spacing="16">
+        <Label 
+            Text="Create an account"
+                           FontSize="22"
+               FontAttributes="Bold"
+               TextColor="White"
+               HorizontalOptions="Center"
+               Margin="0,0,0,24"/>
+    <Entry Placeholder="Username (at least 3 characters)"
+               Text="{Binding Username}"
+               BackgroundColor="#2E2E4A"
+               TextColor="White"
+               PlaceholderColor="#8888AA"/>
+
+    <Entry Placeholder="Password (at least 6 digits)"
+               Text="{Binding Password}"
+               IsPassword="True"
+               BackgroundColor="#2E2E4A"
+               TextColor="White"
+               PlaceholderColor="#8888AA"/>
+
+    <Entry Placeholder="Confirm Password"
+               Text="{Binding ConfirmPassword}"
+               IsPassword="True"
+               BackgroundColor="#2E2E4A"
+               TextColor="White"
+               PlaceholderColor="#8888AA"/>
+
+    <Label Text="{Binding ErrorMessage}"
+               TextColor="#FF6B6B"
+               FontSize="13"/>
+
+    <Button Text="register"
+                BackgroundColor="#845EC2"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="14"
+                HeightRequest="50"
+                Command="{Binding RegisterCommand}"/>
+
+    <Button Text="Already have an account? Log in"
+                BackgroundColor="Transparent"
+                TextColor="White"
+                Command="{Binding GoToLoginCommand}"/>
+
+
+
+    </VerticalStackLayout>
+</ContentPage>

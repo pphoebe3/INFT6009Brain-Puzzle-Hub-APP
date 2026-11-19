@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<!--Navigation-->
+<Shell
+    x:Class="BrainPuzzleHub.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:BrainPuzzleHub"
+    xmlns:game="clr-namespace:BrainPuzzleHub.UIGAMEPAGE"
+    Title="BrainPuzzleHub">
+    <!--Register Router-->
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="MainPage" />
+<!--//2048-->
+    <!--<ShellContent ContentTemplate="{DataTemplate game:Game2048_Page}" 
+                  Route="Game2048Page"/>
+    Registering routes using ShellContent causes the Shell to pre-create page instances,
+
+which conflicts with dependency injection via AddTransient.-->
+    
+</Shell>
